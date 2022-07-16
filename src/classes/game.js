@@ -100,8 +100,8 @@ export default class Game {
     createBoard = () => {
         let texture = new three.TextureLoader().load('../../assets/textures/grass.jpg')
         texture.wrapS = three.RepeatWrapping;
-        texture.warpT = three.RepeatWrapping;
-        texture.repeat.set(150, 150);
+        texture.wrapT = three.RepeatWrapping;
+        texture.repeat.set(600, 600);
         let geo = new three.PlaneGeometry(2048, 2048)
         let mat = new three.MeshBasicMaterial({map: texture, side: three.DoubleSide})
         let plane = new three.Mesh(geo, mat);
