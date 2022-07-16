@@ -5,9 +5,11 @@ import Game from "./classes/game.js";
 function main(){
     let game = new Game();
 
-    game.render();
-    game.loadObjMtl('../../assets/camion jugete.obj', '../../assets/camion jugete.mtl')
+    game.loadObjMtl('camion jugete.obj', 'camion jugete.mtl')
     game.initializeSkybox();
+    game.createBoard();
+    game.render();
+
 }
 
 //Where everything is born

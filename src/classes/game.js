@@ -17,8 +17,11 @@ export default class Game {
 
         //Initialize OBJLoader
         this.loader = new OBJLoader();
+        this.loader.setPath('../../assets/')
         this.imgLoader = new three.ImageLoader();
         this.mtlLoader = new MTLLoader();
+        this.mtlLoader.setPath('../../assets/')
+        this.textureLoader = 
         //mtlLoader.setPath('path/to/assets/')
         //mtlLoader.setTexturePath('path/to/textures')
 
@@ -72,7 +75,7 @@ export default class Game {
     initializeSkybox = () => {
         console.log('in inside skybox')
         let matArray = [];
-        let texture_posX = new three.TextureLoader().load('../../assets/galaxy/galaxy+X.jpg')
+        let texture_posX = new three.TextureLoader().load('../../assets/galaxy/galaxy+X.png')
         let texture_posY = new three.TextureLoader().load('../../assets/galaxy/galaxy+Y.png')
         let texture_posZ = new three.TextureLoader().load('../../assets/galaxy/galaxy+Z.png')
         let texture_negX = new three.TextureLoader().load('../../assets/galaxy/galaxy-X.png')
@@ -92,6 +95,19 @@ export default class Game {
         let skyboxGeo = new three.BoxGeometry(10000, 10000, 10000);
         let skybox = new three.Mesh(skyboxGeo, matArray);
         this.scene.add(skybox);
+    }
+
+    createBoard = () => {
+        let texture = new three.TextureLoader().load('../../assets/textures/grass.jpg')
+        texture.wrapS = three.RepeatWrapping;
+        texture.warpT = three.RepeatWrapping;
+        texture.repeat.set(150, 150);
+        let geo = new three.PlaneGeometry(2048, 2048)
+        let mat = new three.MeshBasicMaterial({map: texture, side: three.DoubleSide})
+        let plane = new three.Mesh(geo, mat);
+        plane.rotation.x = Math.PI/2
+
+        this.scene.add(plane)
     }
 
 }
