@@ -3,6 +3,7 @@ import * as three from 'three'
 import {OBJLoader} from 'three/examples/jsm/loaders/OBJLoader'
 import {MTLLoader} from 'three/examples/jsm/loaders/MTLLoader'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
+import { loadAllObjects } from './gameObjectHelper'
 
 export default class Game {
     constructor(){
@@ -21,23 +22,13 @@ export default class Game {
         this.imgLoader = new three.ImageLoader();
         this.mtlLoader = new MTLLoader();
         this.mtlLoader.setPath('../../assets/')
-        this.textureLoader = 
-        //mtlLoader.setPath('path/to/assets/')
-        //mtlLoader.setTexturePath('path/to/textures')
 
         //Creates canvas on page
         document.body.appendChild(this.renderer.domElement)
 
-        //TODELETE basic example using a cube, should be done outsid constructor and called by a function
-        let geometry = new three.BoxGeometry(1, 1, 1);
-        let meterial = new three.MeshBasicMaterial( { color: 0x00ff00 });
-        this.cube = new three.Mesh(geometry, meterial);
-
         //Show's axis for project, should only be active in dev environment
         this.axesHelper = new three.AxesHelper( 5 );
         this.scene.add(this.axesHelper);
-
-
 
         //Allows you to orbit around the camera
         this.controls = new OrbitControls(this.camera, this.renderer.domElement)
@@ -45,8 +36,10 @@ export default class Game {
         //Adding light so that we can see objects
         this.light = new three.PointLight(0xfdfbd3, 10, 100);
         this.light.position.set(50, 50, 50);
-
         this.scene.add(this.light);
+
+        loadAllObjects(this.scene);
+        this.render();
     }
 
     //Call this to begin the game loop
@@ -57,57 +50,6 @@ export default class Game {
 
         this.renderer.render(this.scene, this.camera);
 
-    }
-
-
-    loadObjMtl = (objFile, mtlFile) => {
-        this.mtlLoader.load(mtlFile, (materials) => {
-            materials.preload();
-            this.loader.setMaterials(materials);
-            this.loader.load(objFile, (object) =>{
-                this.scene.add(object);
-            }, 
-            (xhr) => console.log((xhr.loaded/xhr.total*100)+'% loaded obj'))
-        },
-        (xhr) => console.log((xhr.loaded/xhr.total*100)+'% loaded mtl'))
-    }
-
-    initializeSkybox = () => {
-        console.log('in inside skybox')
-        let matArray = [];
-        let texture_posX = new three.TextureLoader().load('../../assets/galaxy/galaxy+X.png')
-        let texture_posY = new three.TextureLoader().load('../../assets/galaxy/galaxy+Y.png')
-        let texture_posZ = new three.TextureLoader().load('../../assets/galaxy/galaxy+Z.png')
-        let texture_negX = new three.TextureLoader().load('../../assets/galaxy/galaxy-X.png')
-        let texture_negY = new three.TextureLoader().load('../../assets/galaxy/galaxy-Y.png')
-        let texture_negZ = new three.TextureLoader().load('../../assets/galaxy/galaxy-Z.png')
-        matArray.push(new three.MeshBasicMaterial({map: texture_posX}))
-        matArray.push(new three.MeshBasicMaterial({map: texture_posY}))
-        matArray.push(new three.MeshBasicMaterial({map: texture_posZ}))
-        matArray.push(new three.MeshBasicMaterial({map: texture_negX}))
-        matArray.push(new three.MeshBasicMaterial({map: texture_negY}))
-        matArray.push(new three.MeshBasicMaterial({map: texture_negZ}))
-        
-        for(let i=0; i<6; i++){
-            matArray[i].side = three.BackSide
-        }
-
-        let skyboxGeo = new three.BoxGeometry(10000, 10000, 10000);
-        let skybox = new three.Mesh(skyboxGeo, matArray);
-        this.scene.add(skybox);
-    }
-
-    createBoard = () => {
-        let texture = new three.TextureLoader().load('../../assets/textures/grass.jpg')
-        texture.wrapS = three.RepeatWrapping;
-        texture.wrapT = three.RepeatWrapping;
-        texture.repeat.set(600, 600);
-        let geo = new three.PlaneGeometry(2048, 2048)
-        let mat = new three.MeshBasicMaterial({map: texture, side: three.DoubleSide})
-        let plane = new three.Mesh(geo, mat);
-        plane.rotation.x = Math.PI/2
-
-        this.scene.add(plane)
     }
 
 }
