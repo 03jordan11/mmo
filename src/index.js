@@ -4,15 +4,10 @@ import Game from "./classes/game.js";
 //instantiating the loop. Don't call it twice though, thats bad
 function main(){
     let game = new Game();
-    game.loadObjects().then((success) =>{
-        console.log("SHOULD BE LAST")
-        game.render()
-    },
-    (error) =>
-    {
-        console.error("error in loadObjects: " + error)
-    }
-    );
+
+    game.render();
+    game.loadObjMtl('../../assets/camion jugete.obj', '../../assets/camion jugete.mtl')
+    game.initializeSkybox();
 }
 
 //Where everything is born
