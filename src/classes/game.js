@@ -4,9 +4,11 @@ import {OBJLoader} from 'three/examples/jsm/loaders/OBJLoader'
 import {MTLLoader} from 'three/examples/jsm/loaders/MTLLoader'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 import { loadAllObjects } from './gameObjectHelper'
+import { Movement } from './movement'
 
 export default class Game {
     constructor(){
+
         //Basic setup and CAMERA
         this.scene = new three.Scene();
         this.camera = new three.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.1, 100000);
@@ -39,8 +41,11 @@ export default class Game {
         this.scene.add(this.light);
 
         this.gameObjects = loadAllObjects(this.scene);
+        this.movementHelper = new Movement(this.gameObjects.truck);
+
         console.log(this.gameObjects);
         this.render();
+
     }
 
     //Call this to begin the game loop
@@ -48,7 +53,8 @@ export default class Game {
         requestAnimationFrame(this.render);
 
         this.controls.update();
-        this.gameObjects.skybox.rotateX(0.00005)
+        this.gameObjects.skybox.rotateX(0.00005);
+        this.movementHelper.moveDetected();
 
         this.renderer.render(this.scene, this.camera);
 
