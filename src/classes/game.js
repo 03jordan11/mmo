@@ -38,7 +38,8 @@ export default class Game {
         this.light.position.set(50, 50, 50);
         this.scene.add(this.light);
 
-        loadAllObjects(this.scene);
+        this.gameObjects = loadAllObjects(this.scene);
+        console.log(this.gameObjects);
         this.render();
     }
 
@@ -47,6 +48,7 @@ export default class Game {
         requestAnimationFrame(this.render);
 
         this.controls.update();
+        this.gameObjects.skybox.rotateX(0.00005)
 
         this.renderer.render(this.scene, this.camera);
 

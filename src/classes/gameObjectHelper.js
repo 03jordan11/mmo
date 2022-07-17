@@ -1,11 +1,18 @@
 import * as three from 'three'
 import {OBJLoader} from 'three/examples/jsm/loaders/OBJLoader'
 import {MTLLoader} from 'three/examples/jsm/loaders/MTLLoader'
+import { Mesh } from 'three';
 
 export function loadAllObjects(scene){
     let truck = loadObjMtl(scene, '../../assets/camion jugete.obj', '../../assets/camion jugete.mtl');
     let ground = createBoard(scene);
     let skybox = initializeSkybox(scene);
+
+    return {
+        truck: truck,
+        ground: ground,
+        skybox: skybox
+    }
 }
 
 const createBoard = (scene) => {
@@ -17,12 +24,11 @@ const createBoard = (scene) => {
     let mat = new three.MeshBasicMaterial({map: texture, side: three.DoubleSide})
     let plane = new three.Mesh(geo, mat);
     plane.rotation.x = Math.PI/2
-
     scene.add(plane)
+    return plane;
 }
 
 const initializeSkybox = (scene) => {
-    console.log('in inside skybox')
     let matArray = [];
     let texture_posX = new three.TextureLoader().load('../../assets/galaxy/galaxy+X.png')
     let texture_posY = new three.TextureLoader().load('../../assets/galaxy/galaxy+Y.png')
@@ -44,19 +50,22 @@ const initializeSkybox = (scene) => {
     let skyboxGeo = new three.BoxGeometry(10000, 10000, 10000);
     let skybox = new three.Mesh(skyboxGeo, matArray);
     scene.add(skybox);
+    return skybox;
 }
 
 const loadObjMtl = (scene, objFile, mtlFile) => {
     let mtlLoader = new MTLLoader();
     let loader = new OBJLoader();
+    let result = new Mesh();
     mtlLoader.load(mtlFile, (materials) => {
         materials.preload();
         loader.setMaterials(materials);
         loader.load(objFile, (object) =>{
             scene.add(object);
-            return object
+            result = object
         }, 
         (xhr) => console.log((xhr.loaded/xhr.total*100)+'% loaded obj'))
     },
     (xhr) => console.log((xhr.loaded/xhr.total*100)+'% loaded mtl'))
+    return result;
 }
