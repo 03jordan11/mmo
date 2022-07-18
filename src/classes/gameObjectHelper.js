@@ -1,7 +1,6 @@
 import * as three from 'three'
 import {OBJLoader} from 'three/examples/jsm/loaders/OBJLoader'
 import {MTLLoader} from 'three/examples/jsm/loaders/MTLLoader'
-import { Mesh } from 'three';
 
 export function loadAllObjects(scene){
     let truck = loadObjMtl(scene, '../../assets/camion jugete.obj', '../../assets/camion jugete.mtl');
@@ -56,7 +55,7 @@ const initializeSkybox = (scene) => {
 const loadObjMtl = (scene, objFile, mtlFile) => {
     let mtlLoader = new MTLLoader();
     let loader = new OBJLoader();
-    let result = new Mesh();
+    let result = new three.Mesh();
     mtlLoader.load(mtlFile, (materials) => {
         materials.preload();
         loader.setMaterials(materials);

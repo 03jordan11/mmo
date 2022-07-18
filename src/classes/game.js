@@ -41,6 +41,7 @@ export default class Game {
         this.scene.add(this.light);
 
         this.gameObjects = loadAllObjects(this.scene);
+        //this.movementHelper = new Movement(this.gameObjects.truck);
         this.movementHelper = new Movement(this.gameObjects.truck);
 
         console.log(this.gameObjects);
@@ -54,7 +55,11 @@ export default class Game {
 
         this.controls.update();
         this.gameObjects.skybox.rotateX(0.00005);
-        this.movementHelper.moveDetected();
+        this.movementHelper.renderLoop();
+        
+        // console.log(`the truck is at ${this.gameObjects.truck.position.x}:${this.gameObjects.truck.position.y}:${this.gameObjects.truck.position.z}`)
+        // console.log(`the ground is at ${this.gameObjects.ground.position.x}:${this.gameObjects.ground.position.y}:${this.gameObjects.ground.position.z}`)
+        //console.log(`the  is at ${this.gameObjects.truck.position.x}:${this.gameObjects.truck.position.y}:${this.gameObjects.truck.position.z}`)
 
         this.renderer.render(this.scene, this.camera);
 
