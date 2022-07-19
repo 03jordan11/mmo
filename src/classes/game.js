@@ -42,9 +42,10 @@ export default class Game {
 
         this.gameObjects = loadAllObjects(this.scene);
         //this.movementHelper = new Movement(this.gameObjects.truck);
-        this.movementHelper = new Movement(this.gameObjects.truck);
+        //this.movementHelper = new Movement(this.gameObjects.truck);
 
         console.log(this.gameObjects);
+        this.gameObjects.actor.translateY(200)
         this.render();
 
     }
@@ -55,7 +56,7 @@ export default class Game {
 
         this.controls.update();
         this.gameObjects.skybox.rotateX(0.00005);
-        this.movementHelper.renderLoop();
+        //this.movementHelper.renderLoop();
         
         // console.log(`the truck is at ${this.gameObjects.truck.position.x}:${this.gameObjects.truck.position.y}:${this.gameObjects.truck.position.z}`)
         // console.log(`the ground is at ${this.gameObjects.ground.position.x}:${this.gameObjects.ground.position.y}:${this.gameObjects.ground.position.z}`)

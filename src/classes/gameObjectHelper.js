@@ -1,14 +1,17 @@
 import * as three from 'three'
 import {OBJLoader} from 'three/examples/jsm/loaders/OBJLoader'
 import {MTLLoader} from 'three/examples/jsm/loaders/MTLLoader'
+import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader'
 
 export function loadAllObjects(scene){
-    let truck = loadObjMtl(scene, '../../assets/camion jugete.obj', '../../assets/camion jugete.mtl');
+    //let truck = loadObjMtl(scene, '../../assets/camion jugete.obj', '../../assets/camion jugete.mtl');
     let ground = createBoard(scene);
     let skybox = initializeSkybox(scene);
+    let actor = loadActor(scene);
 
     return {
-        truck: truck,
+        actor: actor,
+        //truck: truck,
         ground: ground,
         skybox: skybox
     }
@@ -67,4 +70,15 @@ const loadObjMtl = (scene, objFile, mtlFile) => {
     },
     (xhr) => console.log((xhr.loaded/xhr.total*100)+'% loaded mtl'))
     return result;
+}
+
+const loadActor = (scene) => {
+    const loader = new GLTFLoader();
+    let result = new three.Mesh();
+    loader.load('../../assets/buster_drone/scene.gltf', (gltf) => {
+        result = gltf.scene;
+        result.translateY(1.2);
+        scene.add(gltf.scene);
+    });
+    return result;   
 }
