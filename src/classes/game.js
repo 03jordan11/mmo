@@ -3,7 +3,7 @@ import * as three from 'three'
 import {OBJLoader} from 'three/examples/jsm/loaders/OBJLoader'
 import {MTLLoader} from 'three/examples/jsm/loaders/MTLLoader'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
-import { loadAllObjects } from './gameObjectHelper'
+import { loadAllObjects, LoadObjects } from './gameObjectHelper'
 import { Movement } from './movement'
 
 export default class Game {
@@ -39,14 +39,20 @@ export default class Game {
         this.light.position.set(50, 50, 50);
         this.scene.add(this.light);
 
-        this.gameObjects = loadAllObjects(this.scene);
-        this.movementHelper = new Movement(this.gameObjects.actor);
-        //this.movementHelper = new Movement(this.gameObjects.truck);
-        //this.movementHelper = new Movement(this.gameObjects.truck);
+        this.init();
 
         console.log(this.gameObjects);
-        this.render();
+        
 
+    }
+
+    init = async() => {
+        const objLoader = new LoadObjects(this.scene)
+        await objLoader.loadActor()
+        this.gameObjects = objLoader.getObjects();
+
+        this.movementHelper = new Movement(this.gameObjects.actor);
+        this.render();
     }
 
     //Call this to begin the game loop

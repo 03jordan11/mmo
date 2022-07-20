@@ -3,6 +3,7 @@ import { InputManager } from "./InputManager";
 
 export class Movement{
     constructor(mesh){
+        debugger;
         this.mesh = mesh;
         console.log(this.mesh);
         this.inputs = new InputManager();
@@ -20,29 +21,39 @@ export class Movement{
         let backLeft = back && left;
 
         if (frontRight){
+            this.mesh.translateZ( .05 );
+            this.mesh.translateX( -.05 );
             console.log('frontRight');
-            this.mesh.position.x += 10
-            //this.mesh.translateZ( 10 );
         }
         else if(frontLeft){
+            this.mesh.translateZ( .05 );
+            this.mesh.translateX( .05 );
             console.log('frontLeft');
         }
         else if(backLeft){
+            this.mesh.translateZ( -.05 );
+            this.mesh.translateX( .05 );
             console.log('backLeft');
         }
         else if (backRight){
+            this.mesh.translateZ( -.05 );
+            this.mesh.translateX( -.05 );
             console.log('backRIght');
         }
         else if (forward){
+            this.mesh.translateZ( .05 );
             console.log('forward');
         }
         else if (back){
+            this.mesh.translateZ( -.05 );
             console.log('back');
         }
         else if (left){
+            this.mesh.translateX( .05 );
             console.log('left');
         }
         else if (right){
+            this.mesh.translateX( -.05 );
             console.log('right');
         }
         
