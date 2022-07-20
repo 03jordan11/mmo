@@ -8,7 +8,6 @@ import { Movement } from './movement'
 
 export default class Game {
     constructor(){
-
         //Basic setup and CAMERA
         this.scene = new three.Scene();
         this.camera = new three.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.1, 100000);
@@ -41,11 +40,11 @@ export default class Game {
         this.scene.add(this.light);
 
         this.gameObjects = loadAllObjects(this.scene);
+        this.movementHelper = new Movement(this.gameObjects.actor);
         //this.movementHelper = new Movement(this.gameObjects.truck);
         //this.movementHelper = new Movement(this.gameObjects.truck);
 
         console.log(this.gameObjects);
-        this.gameObjects.actor.translateY(200)
         this.render();
 
     }
@@ -56,7 +55,7 @@ export default class Game {
 
         this.controls.update();
         this.gameObjects.skybox.rotateX(0.00005);
-        //this.movementHelper.renderLoop();
+        this.movementHelper.renderLoop();
         
         // console.log(`the truck is at ${this.gameObjects.truck.position.x}:${this.gameObjects.truck.position.y}:${this.gameObjects.truck.position.z}`)
         // console.log(`the ground is at ${this.gameObjects.ground.position.x}:${this.gameObjects.ground.position.y}:${this.gameObjects.ground.position.z}`)
