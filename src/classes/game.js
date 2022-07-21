@@ -3,7 +3,7 @@ import * as three from 'three'
 import {OBJLoader} from 'three/examples/jsm/loaders/OBJLoader'
 import {MTLLoader} from 'three/examples/jsm/loaders/MTLLoader'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
-import { loadAllObjects, LoadObjects } from './gameObjectHelper'
+import { LoadObjects } from './gameObjectHelper'
 import { Movement } from './movement'
 
 export default class Game {
@@ -35,9 +35,11 @@ export default class Game {
         this.controls = new OrbitControls(this.camera, this.renderer.domElement)
 
         //Adding light so that we can see objects
+        let ambientLight = new three.AmbientLight(0xadd8e6, 1)
         this.light = new three.PointLight(0xfdfbd3, 10, 100);
         this.light.position.set(50, 50, 50);
         this.scene.add(this.light);
+        this.scene.add(ambientLight);
 
         this.init();
 
@@ -63,8 +65,8 @@ export default class Game {
         this.gameObjects.skybox.rotateX(0.00005);
         this.movementHelper.renderLoop();
         
-        // console.log(`the truck is at ${this.gameObjects.truck.position.x}:${this.gameObjects.truck.position.y}:${this.gameObjects.truck.position.z}`)
-        // console.log(`the ground is at ${this.gameObjects.ground.position.x}:${this.gameObjects.ground.position.y}:${this.gameObjects.ground.position.z}`)
+        //console.log(`the truck is at ${this.gameObjects.truck.position.x}:${this.gameObjects.truck.position.y}:${this.gameObjects.truck.position.z}`)
+        //console.log(`the ground is at ${this.gameObjects.ground.position.x}:${this.gameObjects.ground.position.y}:${this.gameObjects.ground.position.z}`)
         //console.log(`the  is at ${this.gameObjects.truck.position.x}:${this.gameObjects.truck.position.y}:${this.gameObjects.truck.position.z}`)
 
         this.renderer.render(this.scene, this.camera);

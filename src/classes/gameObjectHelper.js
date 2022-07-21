@@ -1,6 +1,4 @@
 import * as three from 'three'
-import {OBJLoader} from 'three/examples/jsm/loaders/OBJLoader'
-import {MTLLoader} from 'three/examples/jsm/loaders/MTLLoader'
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader'
 
 
@@ -9,7 +7,7 @@ export class LoadObjects{
     constructor(scene){
         this.scene = scene
        
-        this.ground = this.createBoard(scene)
+        this.ground = this.createBoard(scene);
         this.skybox = this.initializeSkybox(scene)        
     }
 
@@ -17,7 +15,7 @@ export class LoadObjects{
         return {
             actor: this.actor,
             ground: this.ground,
-            skybox: this.skybox
+            skybox: this.skybox,
         }
     }
 
@@ -49,18 +47,18 @@ export class LoadObjects{
 
     initializeSkybox = (scene) => {
         let matArray = [];
-        let texture_posX = new three.TextureLoader().load('../../assets/galaxy/galaxy+X.png')
-        let texture_posY = new three.TextureLoader().load('../../assets/galaxy/galaxy+Y.png')
-        let texture_posZ = new three.TextureLoader().load('../../assets/galaxy/galaxy+Z.png')
-        let texture_negX = new three.TextureLoader().load('../../assets/galaxy/galaxy-X.png')
-        let texture_negY = new three.TextureLoader().load('../../assets/galaxy/galaxy-Y.png')
-        let texture_negZ = new three.TextureLoader().load('../../assets/galaxy/galaxy-Z.png')
-        matArray.push(new three.MeshBasicMaterial({map: texture_posX}))
-        matArray.push(new three.MeshBasicMaterial({map: texture_posY}))
-        matArray.push(new three.MeshBasicMaterial({map: texture_posZ}))
-        matArray.push(new three.MeshBasicMaterial({map: texture_negX}))
-        matArray.push(new three.MeshBasicMaterial({map: texture_negY}))
-        matArray.push(new three.MeshBasicMaterial({map: texture_negZ}))
+        let ft = new three.TextureLoader().load('../../assets/skybox/corona_ft.png')
+        let bk = new three.TextureLoader().load('../../assets/skybox/corona_bk.png')
+        let up = new three.TextureLoader().load('../../assets/skybox/corona_up.png')
+        let dn = new three.TextureLoader().load('../../assets/skybox/corona_dn.png')
+        let lf = new three.TextureLoader().load('../../assets/skybox/corona_lf.png')
+        let rt = new three.TextureLoader().load('../../assets/skybox/corona_rt.png')
+        matArray.push(new three.MeshBasicMaterial({map: lf}))
+        matArray.push(new three.MeshBasicMaterial({map: rt}))
+        matArray.push(new three.MeshBasicMaterial({map: up}))
+        matArray.push(new three.MeshBasicMaterial({map: dn}))
+        matArray.push(new three.MeshBasicMaterial({map: ft}))
+        matArray.push(new three.MeshBasicMaterial({map: bk}))
         
         for(let i=0; i<6; i++){
             matArray[i].side = three.BackSide
@@ -75,14 +73,12 @@ export class LoadObjects{
 }
 
 export function loadAllObjects(scene){
-    //let truck = loadObjMtl(scene, '../../assets/camion jugete.obj', '../../assets/camion jugete.mtl');
     let ground = createBoard(scene);
     let skybox = initializeSkybox(scene);
     let actor = loadActor(scene);
 
     return {
         actor: actor,
-        //truck: truck,
         ground: ground,
         skybox: skybox
     }
