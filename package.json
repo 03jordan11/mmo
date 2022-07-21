@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "three": "^0.142.0",
-    "three-obj-loader": "^1.1.3"
+    "three-obj-loader": "^1.1.3",
+    "three.terrain.js": "^2.0.0"
   }
 }
