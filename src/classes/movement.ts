@@ -2,15 +2,13 @@ import * as three from "three"
 import { InputManager } from "./InputManager";
 
 export class Movement{
-    constructor(mesh){
-        debugger;
+    mesh: three.Mesh | three.Group;
+    inputs = new InputManager();
+    constructor(mesh: three.Mesh | three.Group){
         this.mesh = mesh;
-        console.log(this.mesh);
-        this.inputs = new InputManager();
-
     }
 
-    renderLoop = () => {
+    renderLoop = ():void => {
         let forward = this.inputs.w;
         let back = this.inputs.s;
         let right = this.inputs.d;

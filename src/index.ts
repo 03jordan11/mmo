@@ -1,4 +1,4 @@
-import Game from "./classes/game.js";
+import Game from "./classes/game";
 
 function main(){
     let game = new Game();

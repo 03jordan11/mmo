@@ -1,30 +1,29 @@
 import * as three from 'three'
+import gameObjects from './models/gameObjects';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader'
 
 
 export class LoadObjects{
-    actor = null;
-    constructor(scene){
+    gameObjects = new gameObjects();
+    scene: three.Scene;
+
+    constructor(scene: three.Scene){
         this.scene = scene
        
-        this.ground = this.createBoard(scene);
-        this.skybox = this.initializeSkybox(scene)        
+        this.gameObjects.ground = this.createBoard(scene);
+        this.gameObjects.skybox = this.initializeSkybox(scene)        
     }
 
     getObjects = () => {
-        return {
-            actor: this.actor,
-            ground: this.ground,
-            skybox: this.skybox,
-        }
+        return this.gameObjects;
     }
 
-    loadActor = () => {
-        return new Promise((resolve, reject) => {
+    loadActor = (): Promise<void> => {
+        return new Promise((resolve, reject): void => {
             const loader = new GLTFLoader();
             loader.load('../../assets/buster_drone/scene.gltf', (gltf) => {
                 gltf.scene.translateY(1.2);
-                this.actor = gltf.scene;
+                this.gameObjects.actor = gltf.scene;
                 this.scene.add(gltf.scene);
                 resolve();
             });
@@ -32,7 +31,7 @@ export class LoadObjects{
         
     }
 
-    createBoard = (scene) => {
+    createBoard = (scene: three.Scene) : three.Mesh => {
         let texture = new three.TextureLoader().load('../../assets/textures/grass.jpg')
         texture.wrapS = three.RepeatWrapping;
         texture.wrapT = three.RepeatWrapping;
@@ -45,7 +44,7 @@ export class LoadObjects{
         return plane;
     }
 
-    initializeSkybox = (scene) => {
+    initializeSkybox = (scene: three.Scene) : three.Mesh => {
         let matArray = [];
         let ft = new three.TextureLoader().load('../../assets/skybox/corona_ft.png')
         let bk = new three.TextureLoader().load('../../assets/skybox/corona_bk.png')
@@ -70,18 +69,6 @@ export class LoadObjects{
         return skybox;
     }
 
-}
-
-export function loadAllObjects(scene){
-    let ground = createBoard(scene);
-    let skybox = initializeSkybox(scene);
-    let actor = loadActor(scene);
-
-    return {
-        actor: actor,
-        ground: ground,
-        skybox: skybox
-    }
 }
 
 

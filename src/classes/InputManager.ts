@@ -11,7 +11,7 @@ export class InputManager{
         document.addEventListener('keyup', this._onKeyup)
     }
 
-    _onKeydown = (e) => {
+    _onKeydown = (e: KeyboardEvent) => {
         switch(e.key){
             case 'w':
                 this.w = true;
@@ -27,7 +27,7 @@ export class InputManager{
                 break;
         }
     }
-    _onKeyup = (e) => {
+    _onKeyup = (e: KeyboardEvent) => {
         switch(e.key){
             case 'w':
                 this.w = false;
