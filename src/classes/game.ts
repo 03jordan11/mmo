@@ -24,27 +24,28 @@ export default class Game {
     
     
     constructor(){
+        //In case user resizes window
+        this.windowResize();
+
         //Basic setup and CAMERA
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.camera.position.z = 1;
         this.camera.position.y = 1;
         this.camera.position.x = -1;
 
-        //Initialize OBJLoader
-        
+        //set paths for loaders
         this.loader.setPath('../../assets/')
-
         this.mtlLoader.setPath('../../assets/')
 
-        //Creates canvas on page
+        //creating canvas
+        this.renderer.domElement.style.width = '100vw'
+        this.renderer.domElement.style.height = '100vh'
         document.body.appendChild(this.renderer.domElement)
 
         //Show's axis for project, should only be active in dev environment
         this.scene.add(this.axesHelper);
 
-        //Allows you to orbit around the camera
-
-        //Adding light so that we can see objects
+        //Configruing lights
         this.light.position.set(50, 50, 50);
         this.scene.add(this.light);
         this.scene.add(this.ambientLight);
@@ -72,13 +73,25 @@ export default class Game {
         this.controls.update();
         this.gameObjects.skybox.rotateX(0.00005);
         this.movementHelper.renderLoop();
-        
-        //console.log(`the truck is at ${this.gameObjects.truck.position.x}:${this.gameObjects.truck.position.y}:${this.gameObjects.truck.position.z}`)
-        //console.log(`the ground is at ${this.gameObjects.ground.position.x}:${this.gameObjects.ground.position.y}:${this.gameObjects.ground.position.z}`)
-        //console.log(`the  is at ${this.gameObjects.truck.position.x}:${this.gameObjects.truck.position.y}:${this.gameObjects.truck.position.z}`)
-
         this.renderer.render(this.scene, this.camera);
 
+    }
+
+    windowResize = ():void => {
+        console.log('im in above');
+       
+        window.addEventListener('resize', (ev) => {
+            console.log('im in')
+            this.renderer.setSize(window.innerWidth, window.innerHeight, false);
+            this.camera.aspect = window.innerWidth/window.innerHeight;
+            this.camera.updateProjectionMatrix();
+        });
+        window.addEventListener("gamepadconnected", function(e) {
+            console.log(e.gamepad)
+            console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.",
+            e.gamepad.index, e.gamepad.id,
+            e.gamepad.buttons.length, e.gamepad.axes.length);
+          });
     }
 
 }
