@@ -3,6 +3,8 @@ import gameObjects from './models/gameObjects';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader'
 import Character from './characterController';
 import { InputManager } from './InputManager';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'; 
+import { Vector3 } from 'three';
 
 
 export class LoadObjects{
@@ -13,7 +15,7 @@ export class LoadObjects{
         this.scene = scene
        
         this.gameObjects.ground = this.createBoard(scene);
-        this.gameObjects.skybox = this.initializeSkybox(scene)        
+        this.gameObjects.skybox = this.initializeSkybox(scene);  
     }
 
     render = () => {
@@ -27,16 +29,38 @@ export class LoadObjects{
 
     loadActor = (): Promise<void> => {
         return new Promise((resolve, reject): void => {
-            const loader = new GLTFLoader();
-            loader.load('../../assets/buster_drone/scene.gltf', (gltf) => {
-                gltf.scene.translateY(1.2);
-                gltf.scene.castShadow = true;
-                this.gameObjects.player = new Character('jordan', new InputManager(), gltf.scene)
-                this.scene.add(gltf.scene);
-                resolve();
-            });
+            // const loader = new GLTFLoader();
+            // loader.load('../../assets/buster_drone/scene.gltf', (gltf) => {
+            //     gltf.scene.translateY(1.2);
+            //     gltf.scene.castShadow = true;
+            //     this.gameObjects.player = new Character('jordan', new InputManager(), gltf.scene)
+            //     this.scene.add(gltf.scene);
+            //     resolve();
+            // });
+            const loader = new FBXLoader();;
+            loader.load(
+                '../../assets/xbot.fbx',
+                (object) => {
+                    object.castShadow = true;
+                    object.scale.set(0.01, 0.01, 0.01);
+                    this.gameObjects.player = new Character('jordan', new InputManager(), object)
+                    this.scene.add(object);
+                    resolve();
+                }
+            )
         })
         
+    }
+
+    loadCharacter = () => {
+        const loader = new FBXLoader();;
+        loader.load(
+            '../../assets/xbot.fbx',
+            (object) => {
+                this.gameObjects.player = new Character('jordan', new InputManager(), object)
+                this.scene.add(object);
+            }
+        )
     }
 
     createBoard = (scene: three.Scene) : three.Mesh => {
