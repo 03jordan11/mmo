@@ -6,6 +6,7 @@ import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 import { LoadObjects } from './gameObjectHelper'
 import { Movement } from './movement'
 import  gameObjects  from './models/gameObjects';
+import { BoxGeometry, Mesh, MeshPhongMaterial } from 'three'
 
 export default class Game {
     gameObjects: gameObjects;
@@ -61,8 +62,6 @@ export default class Game {
         this.init();
 
         console.log(this.gameObjects);
-        
-
     }
 
     init = async():Promise<void> => {

@@ -41,6 +41,11 @@ export class LoadObjects{
             loader.load(
                 '../../assets/xbot.fbx',
                 (object) => {
+                    object.traverse((node) => {
+                        if (node instanceof three.Mesh){
+                            node.castShadow = true;
+                        }
+                    })
                     object.castShadow = true;
                     object.scale.set(0.01, 0.01, 0.01);
                     this.gameObjects.player = new Character('jordan', new InputManager(), object)
@@ -57,6 +62,12 @@ export class LoadObjects{
         loader.load(
             '../../assets/xbot.fbx',
             (object) => {
+                object.traverse((node) => {
+                    if (node instanceof three.Mesh){
+                        node.castShadow = true;
+                    }
+                })
+                object.castShadow = true;
                 this.gameObjects.player = new Character('jordan', new InputManager(), object)
                 this.scene.add(object);
             }
@@ -68,7 +79,7 @@ export class LoadObjects{
         texture.wrapS = three.RepeatWrapping;
         texture.wrapT = three.RepeatWrapping;
         texture.repeat.set(600, 600);
-        let geo = new three.PlaneGeometry(2048, 2048)
+        let geo = new three.BoxGeometry(2048, 2048, 0.05)//new three.PlaneGeometry(2048, 2048)
         let mat = new three.MeshPhongMaterial({map: texture, side: three.DoubleSide})
         let plane = new three.Mesh(geo, mat);
         plane.rotation.x = Math.PI/2
