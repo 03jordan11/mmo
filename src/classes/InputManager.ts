@@ -17,7 +17,16 @@ export class InputManager{
         document.addEventListener('keyup', this._onKeyup)
     }
 
-    
+    /**
+     * This function sets the keys to true if they have
+     * been pressed, and sets their corresponding 'first'
+     * flag if it was the first time they were called. 
+     * This allows for actions where you just want to check if a 
+     * button was pressed once, and don't care if the button
+     * was held down. Such is the case when interacting with objects
+     * 
+     * @param e keyboard event
+     */
     _onKeydown = (e: KeyboardEvent) => {
         switch(e.key){
             case 'w':

@@ -8,7 +8,7 @@ export class Movement{
         this.mesh = mesh;
     }
 
-    renderLoop = ():void => {
+    render = ():void => {
         let forward = this.inputs.w;
         let back = this.inputs.s;
         let right = this.inputs.d;

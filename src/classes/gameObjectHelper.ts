@@ -1,6 +1,8 @@
 import * as three from 'three'
 import gameObjects from './models/gameObjects';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader'
+import Character from './characterController';
+import { InputManager } from './InputManager';
 
 
 export class LoadObjects{
@@ -14,6 +16,11 @@ export class LoadObjects{
         this.gameObjects.skybox = this.initializeSkybox(scene)        
     }
 
+    render = () => {
+        this.gameObjects.player.render();
+        this.gameObjects.skybox.rotateX(0.00005);
+    }
+
     getObjects = () => {
         return this.gameObjects;
     }
@@ -23,7 +30,8 @@ export class LoadObjects{
             const loader = new GLTFLoader();
             loader.load('../../assets/buster_drone/scene.gltf', (gltf) => {
                 gltf.scene.translateY(1.2);
-                this.gameObjects.actor = gltf.scene;
+                gltf.scene.castShadow = true;
+                this.gameObjects.player = new Character('jordan', new InputManager(), gltf.scene)
                 this.scene.add(gltf.scene);
                 resolve();
             });
@@ -37,9 +45,10 @@ export class LoadObjects{
         texture.wrapT = three.RepeatWrapping;
         texture.repeat.set(600, 600);
         let geo = new three.PlaneGeometry(2048, 2048)
-        let mat = new three.MeshBasicMaterial({map: texture, side: three.DoubleSide})
+        let mat = new three.MeshPhongMaterial({map: texture, side: three.DoubleSide})
         let plane = new three.Mesh(geo, mat);
         plane.rotation.x = Math.PI/2
+        plane.receiveShadow = true;
         scene.add(plane)
         return plane;
     }

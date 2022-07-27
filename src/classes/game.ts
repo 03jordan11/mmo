@@ -19,11 +19,19 @@ export default class Game {
     mtlLoader = new MTLLoader();
     axesHelper = new three.AxesHelper( 5 );
     controls = new OrbitControls(this.camera, this.renderer.domElement)
-    ambientLight = new three.AmbientLight(0xadd8e6, 1)
-    light = new three.PointLight(0xfdfbd3, 10, 100);
+    light = new three.DirectionalLight(0xfdfbd3, 4);
+    objLoader: LoadObjects;
     
     
     constructor(){
+        //Renderer configuration
+        this.renderer.debug.checkShaderErrors = true; //turn this off in production
+        this.renderer.physicallyCorrectLights = true;
+        this.renderer.shadowMap.enabled = true;
+        this.renderer.shadowMap.type = three.PCFSoftShadowMap;
+        console.log(this.renderer.info);
+        console.log(this.renderer.getPixelRatio())
+
         //In case user resizes window
         this.windowResize();
 
@@ -46,9 +54,9 @@ export default class Game {
         this.scene.add(this.axesHelper);
 
         //Configruing lights
-        this.light.position.set(50, 50, 50);
+        this.light.position.set(-100, 10, 0);
+        this.light.castShadow = true;
         this.scene.add(this.light);
-        this.scene.add(this.ambientLight);
 
         this.init();
 
@@ -58,23 +66,44 @@ export default class Game {
     }
 
     init = async():Promise<void> => {
-        const objLoader = new LoadObjects(this.scene)
-        await objLoader.loadActor()
-        this.gameObjects = objLoader.getObjects();
+        this.objLoader = new LoadObjects(this.scene)
+        await this.objLoader.loadActor()
+        this.gameObjects = this.objLoader.getObjects();
 
-        this.movementHelper = new Movement(this.gameObjects.actor);
+        this.movementHelper = new Movement(this.gameObjects.player.mesh);
         this.render();
     }
 
     //Call this to begin the game loop
     render = ():void => {
         requestAnimationFrame(this.render);
-
+        //this.light.position.setX(this.light.position.x + .1);
+        this.controlSun();
         this.controls.update();
-        this.gameObjects.skybox.rotateX(0.00005);
-        this.movementHelper.renderLoop();
+        this.objLoader.render();
         this.renderer.render(this.scene, this.camera);
 
+    }
+
+    controlSun = () => {
+       
+        if(this.light.intensity != 4 && this.light.position.x !== 100){
+            this.light.intensity = this.light.intensity + .05
+        }else{
+            this.light.position.setX(this.light.position.x + .1);
+        }
+ 
+        if (this.light.position.x >= 100){
+            if(this.light.intensity != 1){
+                console.log(`intensity is ${this.light.intensity}`);
+                this.light.intensity = this.light.intensity - .05;
+            }
+            else{
+                this.light.position.setX(-100);
+            }
+                
+        }
+        
     }
 
     windowResize = ():void => {
