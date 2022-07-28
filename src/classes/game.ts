@@ -22,9 +22,11 @@ export default class Game {
     controls = new OrbitControls(this.camera, this.renderer.domElement)
     light = new three.DirectionalLight(0xfdfbd3, 4);
     objLoader: LoadObjects;
+    clock = new three.Clock();
     
     
     constructor(){
+        this.clock.getElapsedTime();
         //Renderer configuration
         this.renderer.debug.checkShaderErrors = true; //turn this off in production
         this.renderer.physicallyCorrectLights = true;
@@ -75,8 +77,8 @@ export default class Game {
 
     //Call this to begin the game loop
     render = ():void => {
+        //console.log(this.clock.getElapsedTime());
         requestAnimationFrame(this.render);
-        //this.light.position.setX(this.light.position.x + .1);
         this.controlSun();
         this.controls.update();
         this.objLoader.render();
@@ -85,22 +87,24 @@ export default class Game {
     }
 
     controlSun = () => {
-       
-        if(this.light.intensity != 4 && this.light.position.x !== 100){
-            this.light.intensity = this.light.intensity + .05
-        }else{
-            this.light.position.setX(this.light.position.x + .1);
+        const INTENSITY_DELTA = .003;
+        const POSITION_DELTA = .003;
+
+        if(this.light.intensity < 4 && this.light.position.x == -100){
+            this.light.intensity = this.light.intensity + INTENSITY_DELTA
+        }
+        else{
+            this.light.position.setX(this.light.position.x + POSITION_DELTA);
         }
  
         if (this.light.position.x >= 100){
-            if(this.light.intensity != 1){
-                console.log(`intensity is ${this.light.intensity}`);
-                this.light.intensity = this.light.intensity - .05;
+            if(this.light.intensity <= 0){
+                this.light.position.setX(-100)
             }
             else{
-                this.light.position.setX(-100);
+                this.light.intensity = this.light.intensity - INTENSITY_DELTA;
+                console.log(`intensity is ${this.light.intensity}`);
             }
-                
         }
         
     }

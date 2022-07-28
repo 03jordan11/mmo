@@ -37,7 +37,7 @@ export class LoadObjects{
             //     this.scene.add(gltf.scene);
             //     resolve();
             // });
-            const loader = new FBXLoader();;
+            const loader = new FBXLoader();
             loader.load(
                 '../../assets/xbot.fbx',
                 (object) => {
@@ -48,9 +48,18 @@ export class LoadObjects{
                     })
                     object.castShadow = true;
                     object.scale.set(0.01, 0.01, 0.01);
-                    this.gameObjects.player = new Character('jordan', new InputManager(), object)
-                    this.scene.add(object);
-                    resolve();
+
+                    const animLoader = new FBXLoader();
+                    animLoader.load('../../assets/Idle.fbx', (anim) => {
+                        const mixer = new three.AnimationMixer(object)
+                        const idle = mixer.clipAction(anim.animations[0]);
+                        idle.play();
+                        this.gameObjects.player = new Character('jordan', new InputManager(), object)
+                        this.scene.add(object);
+                        resolve();
+
+                    })
+
                 }
             )
         })
