@@ -4,83 +4,56 @@ import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader'
 import Character from './characterController';
 import { InputManager } from './InputManager';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'; 
-import { Vector3 } from 'three';
 
 
 export class LoadObjects{
     gameObjects = new gameObjects();
     scene: three.Scene;
+    idle: three.AnimationAction;
+    mixer: three.AnimationMixer;
+    clock = new three.Clock();
 
     constructor(scene: three.Scene){
         this.scene = scene
        
         this.gameObjects.ground = this.createBoard(scene);
-        this.gameObjects.skybox = this.initializeSkybox(scene);  
+        this.gameObjects.skybox = this.initializeSkybox(scene);
+        this.loadActor();
     }
 
     render = () => {
         this.gameObjects.player.render();
         this.gameObjects.skybox.rotateX(0.00005);
+        if (this.mixer){
+            this.mixer.update(this.clock.getDelta());
+        }
     }
 
     getObjects = () => {
         return this.gameObjects;
     }
 
-    loadActor = (): Promise<void> => {
-        return new Promise((resolve, reject): void => {
-            // const loader = new GLTFLoader();
-            // loader.load('../../assets/buster_drone/scene.gltf', (gltf) => {
-            //     gltf.scene.translateY(1.2);
-            //     gltf.scene.castShadow = true;
-            //     this.gameObjects.player = new Character('jordan', new InputManager(), gltf.scene)
-            //     this.scene.add(gltf.scene);
-            //     resolve();
-            // });
-            const loader = new FBXLoader();
-            loader.load(
-                '../../assets/xbot.fbx',
-                (object) => {
-                    object.traverse((node) => {
-                        if (node instanceof three.Mesh){
-                            node.castShadow = true;
-                        }
-                    })
-                    object.castShadow = true;
-                    object.scale.set(0.01, 0.01, 0.01);
-
-                    const animLoader = new FBXLoader();
-                    animLoader.load('../../assets/Idle.fbx', (anim) => {
-                        const mixer = new three.AnimationMixer(object)
-                        const idle = mixer.clipAction(anim.animations[0]);
-                        idle.play();
-                        this.gameObjects.player = new Character('jordan', new InputManager(), object)
-                        this.scene.add(object);
-                        resolve();
-
-                    })
-
-                }
-            )
-        })
-        
+    getIdle = () => {
+        return this.idle;
     }
-
-    loadCharacter = () => {
-        const loader = new FBXLoader();;
-        loader.load(
-            '../../assets/xbot.fbx',
-            (object) => {
-                object.traverse((node) => {
-                    if (node instanceof three.Mesh){
-                        node.castShadow = true;
-                    }
-                })
-                object.castShadow = true;
-                this.gameObjects.player = new Character('jordan', new InputManager(), object)
-                this.scene.add(object);
+    
+    loadActor = async () => {
+        const loader = new FBXLoader();
+        let object = await loader.loadAsync('../../assets/xbot.fbx');
+        object.traverse((node) => {
+            if (node instanceof three.Mesh){
+                node.castShadow = true;
             }
-        )
+        });
+        object.scale.set(0.01, 0.01, 0.01);
+
+        const animLoader = new FBXLoader();
+        this.mixer = new three.AnimationMixer(object);
+        let anim = await animLoader.loadAsync('../../assets/Idle.fbx');
+        let idle = this.mixer.clipAction(anim.animations[0]).play();
+        idle.play();
+        this.scene.add(object);
+        this.gameObjects.player = new Character('jordan', new InputManager(), object);
     }
 
     createBoard = (scene: three.Scene) : three.Mesh => {
@@ -116,7 +89,7 @@ export class LoadObjects{
             matArray[i].side = three.BackSide
         }
     
-        let skyboxGeo = new three.BoxGeometry(10000, 10000, 10000);
+        let skyboxGeo = new three.BoxGeometry(1000, 1000, 1000);
         let skybox = new three.Mesh(skyboxGeo, matArray);
         scene.add(skybox);
         return skybox;

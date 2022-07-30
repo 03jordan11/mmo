@@ -6,14 +6,14 @@ import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 import { LoadObjects } from './gameObjectHelper'
 import { Movement } from './movement'
 import  gameObjects  from './models/gameObjects';
-import { BoxGeometry, Mesh, MeshPhongMaterial } from 'three'
 
 export default class Game {
     gameObjects: gameObjects;
     movementHelper: Movement;
 
+    isPlaying = false;
     scene = new three.Scene();
-    camera = new three.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.1, 100000);
+    camera = new three.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.1, 1000);
     renderer = new three.WebGLRenderer();
     loader = new OBJLoader();
     imgLoader = new three.ImageLoader();
@@ -68,10 +68,7 @@ export default class Game {
 
     init = async():Promise<void> => {
         this.objLoader = new LoadObjects(this.scene)
-        await this.objLoader.loadActor()
         this.gameObjects = this.objLoader.getObjects();
-
-        this.movementHelper = new Movement(this.gameObjects.player.mesh);
         this.render();
     }
 
@@ -83,7 +80,6 @@ export default class Game {
         this.controls.update();
         this.objLoader.render();
         this.renderer.render(this.scene, this.camera);
-
     }
 
     controlSun = () => {
@@ -103,17 +99,13 @@ export default class Game {
             }
             else{
                 this.light.intensity = this.light.intensity - INTENSITY_DELTA;
-                console.log(`intensity is ${this.light.intensity}`);
             }
         }
         
     }
 
-    windowResize = ():void => {
-        console.log('im in above');
-       
+    windowResize = ():void => {       
         window.addEventListener('resize', (ev) => {
-            console.log('im in')
             this.renderer.setSize(window.innerWidth, window.innerHeight, false);
             this.camera.aspect = window.innerWidth/window.innerHeight;
             this.camera.updateProjectionMatrix();
